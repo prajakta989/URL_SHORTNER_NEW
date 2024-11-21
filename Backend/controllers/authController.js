@@ -1,6 +1,8 @@
 const User = require("../models/User");
+const mongoose = require('mongoose');
+const bycryptjs = require('bcryptjs');
 
-exports.registerUser = async () => {
+exports.registerUser = async (req,res) => {
   const { username, email, password } = req.body;
   try {
     const user = new User({ username, email, password });

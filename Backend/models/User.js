@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const bycryptjs = require("bycryptjs");
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema(
   {
@@ -30,3 +30,6 @@ userSchema.pre("save", async function (next) {
   }
   next();
 });
+
+const User = mongoose.model('User', userSchema); // Correct export
+module.exports = User;
