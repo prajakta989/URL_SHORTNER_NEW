@@ -5,9 +5,12 @@ const bycryptjs = require('bcryptjs');
 exports.registerUser = async (req,res) => {
   const { username, email, password } = req.body;
   try {
+    const existinguser = await User.findOne({email})
+    if (existinguser) return res.status(409).json({ message: "Email already exists" });
+  
     const user = new User({ username, email, password });
     await user.save();
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({ message: "User registeredd successfully" });
   } catch (error) {
     res.status(400).json({message: error.message})
   }

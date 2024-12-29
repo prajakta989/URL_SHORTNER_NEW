@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -31,6 +31,12 @@ const Login = () => {
   };
 
   const {data, loading, error, fn:fnlogin} = useFetch(login,formData)
+  console.log("dat", data)
+  useEffect(() => {
+    if(error === null && data){
+      console.log("data", data);
+    }
+  },[data, error])
   const handleLogin = async() => {
     setErrors([]);
     try {
@@ -43,7 +49,8 @@ const Login = () => {
           .required("Password is required"),
       });
       await schema.validate(formData,{abortEarly:false})
-      await fnlogin()
+      const resss = await fnlogin()
+      console.log("resss", resss)
     } catch (e) {
         const newErrors = {};
         e.inner?.forEach((err) => {
@@ -84,7 +91,7 @@ const Login = () => {
       </CardContent>
       <CardFooter>
         <Button onClick={handleLogin}>
-          {false ? <BeatLoader size={10} color="#36d7b7" /> : "Login"}
+          {loading ? <BeatLoader size={10} color="#36d7b7" /> : "Login"}
         </Button>
       </CardFooter>
     </Card>

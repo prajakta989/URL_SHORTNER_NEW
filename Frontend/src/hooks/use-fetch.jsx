@@ -4,7 +4,8 @@ const useFetch = (cb, options={}) => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(null);
     const [error, setError] = useState(null);
-
+    console.log("options", options);
+    
     const fn = async(...args) => {
         setLoading(true)
         setError([])
@@ -20,7 +21,7 @@ const useFetch = (cb, options={}) => {
             setLoading(false)
         }
     }
-  return (data, loading, error, fn )
+  return {data, loading, error, fn }
 }
 
 export default useFetch

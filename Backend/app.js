@@ -18,11 +18,16 @@
 
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
+const cors = require('cors');
 // Middleware to parse JSON
 
 connectDB();
+app.use(bodyParser.json());
+app.use(cors());
+app.options('*', cors());  // Handle preflight for all routes
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
