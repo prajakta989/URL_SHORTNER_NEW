@@ -40,3 +40,7 @@ export async function signup({ username, email, password }) {
     throw new Error(error.message);
   }
 }
+
+export async function getCurrentUser(){
+  
+}

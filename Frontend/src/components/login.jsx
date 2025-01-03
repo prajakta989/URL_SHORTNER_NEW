@@ -14,6 +14,7 @@ import Error from "./error";
 import * as Yup from "yup";
 import useFetch from "@/hooks/use-fetch";
 import {login} from "../../../Backend/db/apiAuth"
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -22,6 +23,9 @@ const Login = () => {
   });
   const [errors, setErrors] = useState([]);
 
+  const navigate = useNavigate();
+  let [searchParams]= useSearchParams();
+  const longLink = searchParams.get('createNew')
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -35,6 +39,11 @@ const Login = () => {
   useEffect(() => {
     if(error === null && data){
       console.log("data", data);
+      if(!data?.error){
+        localStorage.setItem("token", data.token);  // Example: Store token
+        localStorage.setItem("user", JSON.stringify(data.user));  // Store user info if needed
+        navigate(`/dashborad?${longLink? `createNew=${longLink}`: "" }`)
+      } 
     }
   },[data, error])
   const handleLogin = async() => {
@@ -67,7 +76,7 @@ const Login = () => {
         <CardDescription>
           to your account if you already have one
         </CardDescription>
-        <Error message="Some Error" />
+        <Error message={data?.error} />
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="space-y-2">
