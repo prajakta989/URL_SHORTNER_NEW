@@ -48,12 +48,11 @@ const Login = () => {
     if (data && !data.error) {
       console.log("Login successful:", data);
 
-      localStorage.setItem("user", JSON.stringify(data.user)); // Store user info
-
       if (data.message === "Logged in successfully") {
-        localStorage.setItem("role", "authenticated");
+        data.user.role = "authenticated";
       }
 
+      localStorage.setItem("user", JSON.stringify(data.user)); // Store user info
       navigate(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
     }
   }, [data, loading, error]); // Only run effect when data, loading, or error changes
