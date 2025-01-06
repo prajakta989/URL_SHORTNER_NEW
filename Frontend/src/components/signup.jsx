@@ -33,14 +33,12 @@ const Signup = () => {
     }));
   };
 
-  const {data, loading, error, fn:fnlogin} = useFetch(signup,formData)
-  console.log("dat", data)
+  const {data, loading, error, fn:fnsignup} = useFetch(signup,formData)
+  console.log("dat", error)
   useEffect(() => {
-    if(error === null && data){
+    if(data && !data.error){
       console.log("data", data);
-      if(!data?.error){
         navigate(`/dashborad`)
-      } 
     }
   },[data, error])
   const handleLogin = async() => {
@@ -57,7 +55,7 @@ const Signup = () => {
           .required("Password is required"),
       });
       await schema.validate(formData,{abortEarly:false})
-      const resss = await fnlogin()
+      const resss = await fnsignup()
       console.log("resss", resss)
     } catch (e) {
         const newErrors = {};
@@ -75,7 +73,7 @@ const Signup = () => {
         <CardDescription>
           to your account if you already have one
         </CardDescription>
-        <Error message="Some Error" />
+        <Error message={error?.message} />
       </CardHeader>
       <CardContent className="space-y-2">
       <div className="space-y-2">

@@ -15,6 +15,7 @@ import * as Yup from "yup";
 import useFetch from "@/hooks/use-fetch";
 import { login } from "../../../Backend/db/apiAuth";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useUrlState } from "@/context";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -36,7 +37,7 @@ const Login = () => {
 
   const { data, loading, error, fn: fnlogin } = useFetch(login, formData);
   console.log("dat", data);
-
+  const {fetchUser} = useUrlState()
   useEffect(() => {
     if (loading) return; // Don't run this effect while loading
 
@@ -48,12 +49,12 @@ const Login = () => {
     if (data && !data.error) {
       console.log("Login successful:", data);
 
-      if (data.message === "Logged in successfully") {
+      
         data.user.role = "authenticated";
-      }
 
       localStorage.setItem("user", JSON.stringify(data.user)); // Store user info
       navigate(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
+      fetchUser()
     }
   }, [data, loading, error]); // Only run effect when data, loading, or error changes
 
