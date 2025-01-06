@@ -14,6 +14,7 @@ import Error from "./error";
 import * as Yup from "yup";
 import useFetch from "@/hooks/use-fetch";
 import {signup} from "../../../Backend/db/apiAuth"
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -23,6 +24,7 @@ const Signup = () => {
   });
   const [errors, setErrors] = useState([]);
 
+   const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -36,6 +38,9 @@ const Signup = () => {
   useEffect(() => {
     if(error === null && data){
       console.log("data", data);
+      if(!data?.error){
+        navigate(`/dashborad`)
+      } 
     }
   },[data, error])
   const handleLogin = async() => {

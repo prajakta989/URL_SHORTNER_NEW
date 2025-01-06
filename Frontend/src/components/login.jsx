@@ -13,7 +13,7 @@ import { BeatLoader } from "react-spinners";
 import Error from "./error";
 import * as Yup from "yup";
 import useFetch from "@/hooks/use-fetch";
-import {login} from "../../../Backend/db/apiAuth"
+import { login } from "../../../Backend/db/apiAuth";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Login = () => {
@@ -24,8 +24,8 @@ const Login = () => {
   const [errors, setErrors] = useState([]);
 
   const navigate = useNavigate();
-  let [searchParams]= useSearchParams();
-  const longLink = searchParams.get('createNew')
+  let [searchParams] = useSearchParams();
+  const longLink = searchParams.get("createNew");
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -34,19 +34,31 @@ const Login = () => {
     }));
   };
 
-  const {data, loading, error, fn:fnlogin} = useFetch(login,formData)
-  console.log("dat", data)
+  const { data, loading, error, fn: fnlogin } = useFetch(login, formData);
+  console.log("dat", data);
+
   useEffect(() => {
-    if(error === null && data){
-      console.log("data", data);
-      if(!data?.error){
-        localStorage.setItem("token", data.token);  // Example: Store token
-        localStorage.setItem("user", JSON.stringify(data.user));  // Store user info if needed
-        navigate(`/dashborad?${longLink? `createNew=${longLink}`: "" }`)
-      } 
+    if (loading) return; // Don't run this effect while loading
+
+    if (error) {
+      console.error("Error:", error);
+      return;
     }
-  },[data, error])
-  const handleLogin = async() => {
+
+    if (data && !data.error) {
+      console.log("Login successful:", data);
+
+      localStorage.setItem("user", JSON.stringify(data.user)); // Store user info
+
+      if (data.message === "Logged in successfully") {
+        localStorage.setItem("role", "authenticated");
+      }
+
+      navigate(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
+    }
+  }, [data, loading, error]); // Only run effect when data, loading, or error changes
+
+  const handleLogin = async () => {
     setErrors([]);
     try {
       const schema = Yup.object().shape({
@@ -57,15 +69,15 @@ const Login = () => {
           .min(6, "Password must be at least 6 characters")
           .required("Password is required"),
       });
-      await schema.validate(formData,{abortEarly:false})
-      const resss = await fnlogin()
-      console.log("resss", resss)
+      await schema.validate(formData, { abortEarly: false });
+      const resss = await fnlogin();
+      console.log("resss", resss);
     } catch (e) {
-        const newErrors = {};
-        e.inner?.forEach((err) => {
-            newErrors[err.path] = err.message;
-        })
-        setErrors(newErrors)
+      const newErrors = {};
+      e.inner?.forEach((err) => {
+        newErrors[err.path] = err.message;
+      });
+      setErrors(newErrors);
     }
   };
 
@@ -86,7 +98,7 @@ const Login = () => {
             placeholder="Enter Email"
             onChange={handleInputChange}
           />
-          {errors.email && <Error message={errors.email}/>}
+          {errors.email && <Error message={errors.email} />}
         </div>
         <div className="space-y-2">
           <Input
@@ -95,7 +107,7 @@ const Login = () => {
             placeholder="Enter Password"
             onChange={handleInputChange}
           />
-          {errors.password && <Error message={errors.password}/>}
+          {errors.password && <Error message={errors.password} />}
         </div>
       </CardContent>
       <CardFooter>
