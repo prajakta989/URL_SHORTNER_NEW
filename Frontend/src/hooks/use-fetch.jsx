@@ -15,6 +15,8 @@ const useFetch = (cb, options={}) => {
             setError(null)
         }
         catch(error){
+            console.log("errrr", error);
+            
            setError(error) 
         }
         finally{

@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { getCurrentUser } from "../../Backend/db/apiAuth";
+import { getCurrentUser } from "./db/apiAuth"; 
 import useFetch from "./hooks/use-fetch";
 
 // 1. Create the context

@@ -13,7 +13,7 @@ import { BeatLoader } from "react-spinners";
 import Error from "./error";
 import * as Yup from "yup";
 import useFetch from "@/hooks/use-fetch";
-import { login } from "../../../Backend/db/apiAuth";
+import { login } from "@/db/apiAuth";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useUrlState } from "@/context";
 
@@ -37,24 +37,21 @@ const Login = () => {
 
   const { data, loading, error, fn: fnlogin } = useFetch(login, formData);
   console.log("dat", data);
-  const {fetchUser} = useUrlState()
+  const { fetchUser } = useUrlState();
   useEffect(() => {
     if (loading) return; // Don't run this effect while loading
 
     if (error) {
-      console.error("Error:", error);
+      console.log("Error", error?.message);
       return;
     }
 
     if (data && !data.error) {
       console.log("Login successful:", data);
-
-      
-        data.user.role = "authenticated";
-
+      data.user.role = "authenticated";
       localStorage.setItem("user", JSON.stringify(data.user)); // Store user info
       navigate(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
-      fetchUser()
+      fetchUser();
     }
   }, [data, loading, error]); // Only run effect when data, loading, or error changes
 
@@ -88,7 +85,7 @@ const Login = () => {
         <CardDescription>
           to your account if you already have one
         </CardDescription>
-        <Error message={data?.error} />
+        <Error message={error?.message} />
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="space-y-2">
