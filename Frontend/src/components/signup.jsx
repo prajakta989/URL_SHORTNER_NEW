@@ -13,18 +13,18 @@ import { BeatLoader } from "react-spinners";
 import Error from "./error";
 import * as Yup from "yup";
 import useFetch from "@/hooks/use-fetch";
-import {signup} from "../../../Backend/db/apiAuth"
+import { signup } from "@/db/apiAuth";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
-    username:"",
+    username: "",
     email: "",
     password: "",
   });
   const [errors, setErrors] = useState([]);
 
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -33,20 +33,19 @@ const Signup = () => {
     }));
   };
 
-  const {data, loading, error, fn:fnsignup} = useFetch(signup,formData)
-  console.log("dat", error)
+  const { data, loading, error, fn: fnsignup } = useFetch(signup, formData);
+  console.log("dat", error);
   useEffect(() => {
-    if(data && !data.error){
+    if (data && !data.error) {
       console.log("data", data);
-        navigate(`/dashborad`)
+      navigate(`/dashboard`);
     }
-  },[data, error])
-  const handleLogin = async() => {
+  }, [data, error]);
+  const handleLogin = async () => {
     setErrors([]);
     try {
       const schema = Yup.object().shape({
-        username: Yup.string()
-          .required("Username is required"),
+        username: Yup.string().required("Username is required"),
         email: Yup.string()
           .email("Invalid Email")
           .required("Email is required"),
@@ -54,15 +53,15 @@ const Signup = () => {
           .min(6, "Password must be at least 6 characters")
           .required("Password is required"),
       });
-      await schema.validate(formData,{abortEarly:false})
-      const resss = await fnsignup()
-      console.log("resss", resss)
+      await schema.validate(formData, { abortEarly: false });
+      const resss = await fnsignup();
+      console.log("resss", resss);
     } catch (e) {
-        const newErrors = {};
-        e.inner?.forEach((err) => {
-            newErrors[err.path] = err.message;
-        })
-        setErrors(newErrors)
+      const newErrors = {};
+      e.inner?.forEach((err) => {
+        newErrors[err.path] = err.message;
+      });
+      setErrors(newErrors);
     }
   };
 
@@ -76,14 +75,14 @@ const Signup = () => {
         <Error message={error?.message} />
       </CardHeader>
       <CardContent className="space-y-2">
-      <div className="space-y-2">
+        <div className="space-y-2">
           <Input
             type="text"
             name="username"
             placeholder="Enter Username"
             onChange={handleInputChange}
           />
-          {errors.username && <Error message={errors.username}/>}
+          {errors.username && <Error message={errors.username} />}
         </div>
         <div className="space-y-2">
           <Input
@@ -92,7 +91,7 @@ const Signup = () => {
             placeholder="Enter Email"
             onChange={handleInputChange}
           />
-          {errors.email && <Error message={errors.email}/>}
+          {errors.email && <Error message={errors.email} />}
         </div>
         <div className="space-y-2">
           <Input
@@ -101,7 +100,7 @@ const Signup = () => {
             placeholder="Enter Password"
             onChange={handleInputChange}
           />
-          {errors.password && <Error message={errors.password}/>}
+          {errors.password && <Error message={errors.password} />}
         </div>
       </CardContent>
       <CardFooter>
