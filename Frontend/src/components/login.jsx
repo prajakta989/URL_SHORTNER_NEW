@@ -35,7 +35,7 @@ const Login = () => {
     }));
   };
 
-  const { data, loading, error, fn: fnlogin } = useFetch(login, formData);
+  const { data, loading, error, fn: fnlogin, setError:setApiErrors } = useFetch(login, formData);
   console.log("dat", data);
   const { fetchUser } = useUrlState();
   useEffect(() => {
@@ -57,6 +57,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     setErrors([]);
+    setApiErrors([]);
     try {
       const schema = Yup.object().shape({
         email: Yup.string()

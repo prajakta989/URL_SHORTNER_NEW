@@ -33,7 +33,7 @@ const Signup = () => {
     }));
   };
 
-  const { data, loading, error, fn: fnsignup } = useFetch(signup, formData);
+  const { data, loading, error, fn: fnsignup, setError:setApiErrors } = useFetch(signup, formData);
   console.log("dat", error);
   useEffect(() => {
     if (data && !data.error) {
@@ -43,6 +43,7 @@ const Signup = () => {
   }, [data, error]);
   const handleLogin = async () => {
     setErrors([]);
+    setApiErrors([])
     try {
       const schema = Yup.object().shape({
         username: Yup.string().required("Username is required"),
